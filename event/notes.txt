@@ -1,0 +1,80 @@
+Event Bridge is a serverless event bus use to handle pub/sub
+type of arch patterns
+
+We can create a serverless event bus using event bridge and it can 
+inject events from veriety of sources 
+sources can be custom application/ec2/lambda/containerised application,
+IT can be mongoDB, SAAS AAP, Auth0
+it also supports aws services to push services to event bridge
+
+-----------------------------------------
+once there are events bus then we can start with rules
+these rules are filters wehere we can look at the content of an event 
+(300 rules per event bus )
+
+these rules are then connected to multiple targets
+** upto 5 targets per rule **
+
+what would happen if event bridge cant send to one of the targets
+event bridge will send the message to target till 24 hours with exponential time gap
+
+and then to handle that failed we can attatch a dlq for that
+DLQ is a SQS queue and we can connect it to the targets
+
+CONTENT BASED FILTERING
+EVENT ARCHIVES AND PLAYBACKS
+SCHEMA REGISTERY:to record the schema of evetns and we can structure them 
+
+//resource based policy : require if we want to give permisions to other services to access event bridge
+
+// now we can create our event bus and then we can send events to this event bus
+by clicking on send events 
+
+can give an event source and add detail type of the evet and also in the event detail 
+we will add the json payload of the event
+
+//when we are sending this event it is also inclding other stuff in the entire event envelop
+{
+  "version": "0",
+  "id": "e5457e84-a826-8df9-af85-1f7cf78bd16a",
+  "detail-type": "orderCreated",
+  "source": "my-ecom-app",
+  "account": "003457291292",
+  "time": "2025-08-12T10:17:47Z",
+  "region": "ap-south-1",
+  "resources": [],
+  "detail": {
+    "orderID": 100,
+    "quantity": 10
+  }
+}
+
+//event pattern. is used to decide if we want to sens a particular event from the service to the target 
+//this is an event rule and it is telling that and event is sent to the target only if its quantity is >5
+{
+  "source": ["my-ecom-app"],
+  "detail-type": ["orderCreated"],
+  "detail": {
+  "quantity": [ { "numeric": [ ">", 5 ] } ],
+    
+  }
+}
+
+Additional settings : HERE WE CAN CREATE A DLQ 
+
+//if we want to run a chron job then the format is : cron(Minutes Hours Day-of-month Month Day-of-week Year)
+______________________________________________________________________________________________________________________________________________
+Schedule	                            |      Expression	         |          Description	                        |       Example Date          |
+_______________________________________________________________________________________________________________________________________________
+Every 1 minute	                      |   cron(0/1 * * * ? *)	   |  Runs every minute	                          |   2025-08-13 10:05:00       |
+_______________________________________________________________________________________________________________________________________________
+Every hour	                          |   cron(0 * * * ? *)	     |  Runs at the start of every hour	            |   2025-08-13 11:00:00       |
+_______________________________________________________________________________________________________________________________________________
+Daily at 9 AM 	                      |   cron(0 9 * * ? *)	     |  Runs every day at 9:00 AM	                  |   2025-08-13 09:00:00       |
+_______________________________________________________________________________________________________________________________________________
+Every Monday at 10 AM	                |   cron(0 10 ? * MON *)	 |  Runs every Monday at 10:00 AM	              |   2025-08-18 10:00:00       |
+_______________________________________________________________________________________________________________________________________________
+On the 1st of every month at midnight	|   cron(0 0 1 * ? *)	     |  Runs monthly on the 1st at 12:00 AM	        |   2025-08-01 00:00:00       |
+_______________________________________________________________________________________________________________________________________________
+On December 25, 2025 at 8:00 AM	      |   cron(0 8 25 12 ? 2025) |	Runs once on December 25, 2025 at 8:00 AM	  |   2025-12-25 08:00:00       |
+_______________________________________________________________________________________________________________________________________________

@@ -1,0 +1,58 @@
+// What is api gateway why its needed
+
+earlier there was monolithic arch all our bakend was in a single server 
+saari requests ek hii server pe jaaye gi 
+
+aaj bhi use hota hai monolithic arch 
+
+DEVIDING THE BACKEDN CODE IN DIFFERENT PARTS
+It decouplled the system into different parts made it fault tolrent 
+
+but got another problem :
+Hrr serer ke liye alag authN and authZ hoga 
+ssl check : ki request https hii aaye
+
+frontend app should know the address of all the servers
+
+
+API GATEWAY : iske andar saare authN and authZ , rate limit ,  ssl routing sab hoga
+user koi bhi request bheje ga toh directly server ko naa jaake api gateway prr jaaye gi 
+monitoring and logging
+Caching , load balancing , rate limitting sabh kuch api gateway handle krr sakta hai 
+
+USES : 
+1)HTTP ENDPOINT 
+2)AWS LAMBDA : API GATEWAY IS serverless aws sab sambhal lega
+3)Any other aws service : fully managed service , humne kuch nahi karna hai sirf batana hai ki kya karo 
+
+//4 steps:
+cliet ne api hit ki hai abb usse 4 steps mai response milega 
+a) Method Request
+➡ Client ne jo request bheji hai, uski validation & permission check yahan hoti hai.
+Query params, headers, path params check honge
+Limit: Request size / rate limiting rules
+AuthN: Authentication (user kaun hai)
+AuthZ: Authorization (user ko yeh kaam karne ka right hai ya nahi)
+
+b) Integration Request
+➡ API Gateway ke paas client ka validated data aagaya.
+Ab yahan pe backend ko bhejne se pehle data ka format change ho sakta hai.
+Keys rename karna
+JSON ko XML me convert karna
+Extra fields add/remove karna
+Basically backend ko samajh aane wale format me data bhejna
+
+c) Integration Response
+➡ Backend ne API Gateway ko jo response bheja, voh yahan aata hai.
+Backend ka raw response ho sakta hai ki API Gateway ko samajh na aaye
+Yahan pe response ka format change hota hai
+Example: XML → JSON, keys rename, extra data remove
+
+d) Method Response
+➡ Ab API Gateway ke paas processed backend data hai.
+Is stage pe client ko bhejne ke liye final polish hoti hai.
+Final status code decide hota hai (200, 404, etc.)
+Response headers set hote hain
+Response body ka format check / validate hota hai (model validation)
+Yahi woh final output hai jo client ko dikhega
+

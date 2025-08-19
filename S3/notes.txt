@@ -1,0 +1,125 @@
+S3 : BUCKET : ek container , jaha files rakhte hai ,
+store and retrieve any amount of data from anywhere
+
+we can store unlimited amount of data : JO costing hogi storage used wise hogi 
+
+BUCKET : AWS KE cloud mai hamare naam ka ucket bann jaaye ga , uss bucket mai we can store our files 
+BUCKET is a region specific service,
+it should have a unique name , similar to goodle drive ,
+
+files choose karo and and then they will move to staging 
+
+defination : cloud based storage service which allows us to store , manage , and retrieve large amounts of data like 
+files, images, videos and Bakcups securly and at scale 
+
+reliable , scalable internet storage making data accessible from anywhere with the help of internet 
+
+kisi bhi jagah se kahi bhi data access krr sakte hai 
+
+
+KEY POINTS : 
+
+stores data as objects, 
+
+Globally unique name , 
+
+region specific : jo bucket jiss region mai banayi toh voh wahi store hoga
+
+EACH OBJECT WITHIN A BUCKET IS STORED AS A KEY VALUE PAIR 
+ 
+
+Data stored as an Object and uske andar bhi KEY VALUE pair
+    
+    KEY : file name , 
+    VALUE : file content 
+    
+    S3 stores upto 5TB OF DATA 
+    Multipart upload is recommended for object with size > 5GB 
+
+
+NOT AVAIBILITY ZONE SPECIFIC : jaise mumbai mai agar banaya toh mumbai ke an
+mumbai mai 3 zone hai then our data will be replicated there 
+Agar ek zone mai problem aa gyi toh baki zones mai available hoga
+
+
+HOW TO HOST A STATIC WEBSITE : 
+1) upload files and assets you need 
+2) then go to the host static website setting : itll give us a url 
+3) then allow public access : jab humm permission provide karege apne bucket ko tabh aap acces krr paaye ge
+
+// public ki permission kaise dete hai through bucket policies
+4)change bucket policies : JSON format mai dete hai that attatch directly to S3 bucket
+who can access the data and what actions they can perform , kis level ki permission de sakte hai 
+
+we can write the policies ourselves or could use policy generator 
+
+GET object : used to retrieve or download files from the S3 Bucket : user can only get files
+
+//principle : matlba kisko allow karna , sabhi ko acess dena hai toh *
+
+agar chane kiya toh file firse upload karo and then it is applied
+in case of negative senario agar versioning hoti 
+
+versioning ko enable karo , iske baad waali files hii version hogi 
+
+S3 REPLICATION : SRR ek aur bucket bana lo usmai backup hota rahega
+cross region REPLICATION if we create a rule 
+
+MAKE BUCKET RAPLICA : of one ucket to another in same or other region 
+and choose to make replica of another bucket
+
+mian bucket--> Management----->Replication Rules----->choose source and destination buuckets  
+and ralicate existing files , and create batch operating job : will continue to run when the file is uploaded 
+and also generate completion report and give its path               
+
+S3 STORAGE CLASS : jaise huumm data store krr rahe hai toh utna uske paise lagege 
+aws provides different storage classes according to our need
+S3 STANDARD , (HIGH FREQUENCY accessible DATA) 
+S3 intelligent tiering , 
+s3 standard-IA , GLACIER TYPE STORAGE
+
+S3 EVEN OBJECT LOOKS LIKE:
+
+{
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "2023-07-31T12:34:56.789Z",
+      "eventName": "ObjectCreated:Put",
+      "s3": {
+        "bucket": {
+          "name": "your-bucket-name",
+          "arn": "arn:aws:s3:::your-bucket-name"
+        },
+        "object": {
+          "key": "path/to/your/file.jpg",
+          "size": 1024,
+          "eTag": "d41d8cd98f00b204e9800998ecf8427e"
+        }
+      }
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

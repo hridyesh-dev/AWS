@@ -1,0 +1,193 @@
+RELATIONAL DATABASE SERVICE 
+===================================
+Our data is stored in form of tables and 
+tables can be linked together with the help of foreign keys
+
+two related data can be accessed with the help of joins 
+
+MYSQL , MARIA-DB , POSTGRES , ORACLE DB2 are relational database 
+
+if i make my personal system as a db then i need to take care of 
+availability , processing power , and internet connectivity all the time
+but this is not possible 
+
+to tackle this problem 
+we can set up our database in an EC2 instance 
+and we can use that instance as a database
+
+1) 24 Hour Uptime 
+2) Full internet connectivity 
+3) Scalability : High speed data processing 
+
+but if we did it , I need to take care of security ,
+we need to take care of availibilty , AUTO-scaling , load-balancing,
+
+Agar availability zone udd gya then it would be a problem
+
+for reading we can create read replicas manually which would make reading operations faster
+______________________________________________________________________________________________________________
+
+--INKA SOLUTION : amazon database ka managed service provide karta hai 
+
+usse kehte hai RDS 
+
+ISMAI problem nahi aaye gi , security patching will be taken care of 
+replicas , high availibilty , monitoring  will be done by aws in RDS  
+
+rds mai yeh sab functionality will be provided by aws in multiple
+availibilty zones 
+manually kuch nahi karna aws khud manage karega 
+
+AWS will do scaling ,  2 tables chaiye, DB in multiple availability zones / multiple regions 
+
+______________________________________________________________________________________________________________
+RDS : 
+//do we need public access : No , we access it privately 
+jis supnet maii mai RDS instance banau ga ussi supnet mai i mai EC2 instance 
+banauga aur waha se mai isse access karne ka try karuga 
+
+ALAG-ALAG DATABASE KE ANDAR ALAG ALAG CONFIG HOTI HAI JO USS DATABASE KE LIYE SPECIFIC HAI 
+
+Endpint : DATABSE konse url pe available hai , database ka host url 
+PORT: 3306 (by default the port of My Sql is 3306)
+
+to work with the db , we created an ec2 instance and after connecting with it 
+humme database se baat karni hai , hamare OS Should have that driver with the help of which we can talk to the DB 
+
+for that we wil install the MYSQL client 
+
+to login into the rds through ec2 user command : mysql -h youtube-demo-1.c7eueag0catm.ap-south-1.rds.amazonaws.com -u admin -p14112607Hri
+
+to get out of sql shell use command :exit
+======================================================================================================================================================
+
+Creating First Database : 
+GO TO RDS , 
+click on CREATE DATABASE :
+1) select one from  engine options (mySQL , mariaDB, Postgres , ORACLE )
+2) Choose templates 
+3) in the instance select name of the DB Instance Identifier (db kis name se dikhega )
+4) in credentail setting choose username and password , jab aap DB Ko access karege tabh kis credentail se hoga
+5) GIVE public/private access (yeh jo rds hai usse publically access karoge ya privately  )
+
+==> Jis subnet ke andar yeh rds banau ga thik ussi subnet se mai ek ec2 instance banao ga aur 
+waha se inn database ko access karne ka try karuga 
+
+6) Then choose Availability Zone and db authentication 
+chosse password authentication and then click on CREATE DATABASE 
+
+Alag-Alag databaase ke andar alag alag config hai jo uss 
+data base se related hai 
+
+TYPES OF Availability : 
+1) Multi-AZ DB Cluster
+2) Multi-AZ DB Instance
+3) Single DB Instance
+
+======================================================================================================================================================
+
+Connect to an RDS INSTANCE : 
+
+set up the security group for all the necessary permissions , edit the inbound rules for ipv and ipv6 
+
+two important things : end points , port : 3306
+
+now go to the EC2 instance and connect to it 
+to talk to our DB install my sql client in our ec2 instance 
+and install drivers/package/modules for node js 
+
+mysql -hRDS_endpoint -uadmin -pPassword
+
+and to go out of db terminal use EXIT command TO ET OUT OF db shell 
+
+======================================================================================================================================================
+we need to select the version of our DB engine 
+=======================================================================================================================================================
+WHAT ARE READ REPLICAS : 
+suppose WHEN we are doing analytics on the data base , to do so we would have to do a lot of read operations 
+because of which the db utilisation increases and it will make it slow 
+
+To tackle this we can create a copy of our database and can do read operations on it, we cant do write operations 
+use the copy databaase not the one in the production 
+
+can also make read replicas for debugging 
+
+=======================================================================================================================================================
+HOW TO MAKE A READ RAPLICA ?
+
+CLICK on you data base now from actions select click on create read raplicas 
+
+we can also enable cross region replication 
+
+In settings select replica source and give name to your read replica 
+
+follow naming convention : read-replica-youtube-demo-1
+
+and enable deletion protection  and click on create read raplica 
+we can select region and availability zone ,
+we can select authentication : using password or using IAM 
+
+Jo Jo changes main table mai karege voh changes humme read replica table mai bhi dikh jaaye ge
+it is used in analytics querries and tools 
+
+ONE PROBLEM :  ou data in present in us-east-1-a if this zone will get down , our db will be down and not receive any querries 
+our end-user will not get querry response nor orders are not saved in the db this is the  problem we faced 
+=======================================================================================================================================================
+
+//MULTI A-Z DEPLOYMENT
+
+problem statement :agr hamara availability zone uda toh hamara db bhi down ho jaaye ga 
+so to tackle this we can configure high availibilty 
+
+we can select Multi-AZ DEPLOYMENT to create a stand by instance
+jo bhi request bhejo ge primary db pe jaata rahega , if primary db goes down 
+standby instance will get active  
+matlab : agar ek availibilty zone down bhi hai toh dusra availibilty zone hamari queries ko resolve karega
+
+IN WHAT CASE OUR primary db gets down : os patching , security updates , loss of Network , storage full in primary db 
+ 
+
+================================================================================================================================================
+
+WHAT IS RDS PROXY , HOW IT CAN BE USED TO MAKE OUR APP FASTER 
+
+
+when i make a querry then there is some operations 
+between (EC2 instance : application server) and our database 
+
+IN dono ke beech kuch operations hote hai : 1) EC2(application server) and 2) Database 
+
+
+//SOME OPERATIONS : 
+1) Application driver : jo application hota hai jo uska driver hota hia 
+mysql command makes a connection between our ec2 instance and our rds instance 
+
+2) Network socket opens in OS and the first task that is done is authentication 
+ki jo user ne username aur password diya hai yeh valid config hai ya nahi 
+then querry will be executed hogi and its output will come and connection will be closed 
+
+jab ek querry jaati hai toh backend pe 4-5 steps chalte hai 
+
+abhi toh thik hai but jab request millions mai ho then, cpu utilisation increases 
+to tackle this we can create proxy 
+
+(application server)
+OS <-----> proxy <----->Database 
+
+proxy is connected to db and will keep some connections open and 
+our querries will hit directly and our memory utilisation will be decreased 
+
+so our databse proxy we can use here   
+
+chooose your database 
+go down to choose your proxy for your database engine 
+
+choose : for how long connection pool will be available
+
+and then choose target group config : Agar iss proxy pe aaye gi toh konse db pe jaaye gi 
+
+select your database 
+
+and select number of connection pool : Highest value 5000 default 100
+
+to run proxy : 

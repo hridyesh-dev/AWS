@@ -1,0 +1,288 @@
+What is Lambda
+
+How to create youre first lambda 
+
+create lambda by uploading zip code file
+
+create lambda by uploading zip code file to s3 bucket and then creating aws lambda function
+
+how to enable our function url for our aws lambda , so that we can access it using the same public url 
+lambda function url : can access the same lambda using url , auth via using credentials
+
+how to create environment variables and use them in out lambda functions
+
+lambda layers : we can create single library of aws using layers and use it into multiple aws-labda function 
+
+
+======================================================================================================================
+
+
+What is lambda : its an executor that takes code as an input  and lambda executes and gives output based on this code
+
+many languages are supported :  py, go lang , java , node
+
+
+how it is different from ec2 instance: 
+
+like a virtual machine , or a virtual server , can be windows or linux 
+once we execute it inside ec3 we will get the output
+
+how it is different : 
+1 no server setup : no ned to worry about seting up the server 
+2 no start or stop : we dont need to start/stop our server
+3 no additional const : just pay as you invoke 
+4 it is serverless , were not using ec2 or virtual servers
+
+==============================================================================================================================
+
+compute service and serverless 
+
+with lambda we need not to manage the servers 
+
+write your code and give it to aws and aws will execute it when needed 
+
+serverless : WE DONT NEED TO MANAGE THE SERVER , CODE LIKH KE AWS KO DE DO 
+AND WHEN THE NEED WILL ARISE AWS WILL EXECUTE IT 
+
+=========================================================================================================================
+
+LAMBDA : it is event driven , when an event happes then the lambda function should run 
+
+Eg: 
+when new object is uploaded to S3 bucket  then our function should run 
+when new item is entered in dynamo db table , then lambda function should run 
+
+pay when invocation , optimise and sacalable will be the job of lambda itself 
+
+DYNAMO DB is also serverless , we just made a table and entered data        
+code is run on a light weight vim 
+
+Role : jab lambda function banao ge , toh ek naya role banega and 
+lambda function saath attatch ho jaaye ga 
+
+eg : 
+our lambda function is accessing object from S3 TOH 
+our lambda function should have the permission to acess S3 , s3 mai koi object daal 
+raha hai ya waha se koi object aa raha hai toh uska access hona chahiye  
+
+ROLE : role ke saath AWS Resource attatch ho jaati hai 
+
+=========================================================================================================================
+//  UPLOADED lambda function from s3 bucket : 
+
+zip the code file , upload that code file on s3 bucket , 
+
+go to your lambda console , click on upload option , choose upload from s3 option 
+and then update
+
+to run ES6 option use .mjs (extension)
+
+
+// Lambda FUNCTION URL : we can access out lambda using url , 
+for this go to confiuration and on left-hand-side we will get the option to update 
+
+function url 
+
+you can make it public 
+or you can make it private too  : test it on postman and have access to secret_token and access_token
+
+
+env variables : when we are using aws lambda we need to set some env variables which are 
+necessary to execute our AWS LAMBDA
+
+this env variables are config for our lambda 
+
+//LAMBDA LAYERS : 
+Whenever you work on multiple projects you wanna create a library for multiple projects 
+LAYER : it is like a library for our lambda function 
+if we want to run a common logic instead of copying same code we can create layers 
+which act as a common library for our lambda functions 
+
+it can be made once and can be used multiple times and then acan be used multple number of times 
+for multiple lambdas 
+
+// make a new folder >> npm init >> make a  node js folder >> and zip it and then 
+
+go to aws lambda >> go to lambda function >> layers : add layers and then cool 
+
+// PASSING DATA TO FUNCTIONS WITH EVENT OBJECT 
+
+agar lambda function ke andar koi bhi value pass karni hai toh event waala jo parameter hai 
+yeh hamare sabse zyada kaam aaye ga 
+
+getting value from event object 
+//Agar Lambda ko HTTP request ke through trigger kiya gaya ho (jaise Postman se), toh event.body ek stringified JSON
+  
+  if(event.body){
+    const body = JSON.parse(event.body);
+    num1 = Number(body.number1) || 0;
+    num2 = Number(body.number2) || 0;
+  }
+  //if called directly through console
+  else{
+    num1 = Number(event.number1) || 0;
+    num2 = Number(event.number2) || 0;
+  }
+
+IN WHAT CASES WE SHOULD USE THEM : costoptimisations  , scheduled tasks , 
+jab S3 pe koi object upload hua yeh sab kaam aws lambda kartaa hai
+
+------------------------------------------------------------------------------------
+=========================
+COLD START AND HOT START : 
+==========================
+Ho we can reduce the time complexity with the help of cold start and hot start 
+
+Jab ek naya lambda function banaya then ek seoerate execution environment is made 
+and when a new event is triggered uss nye execution env mai voh chalta hai 
+
+and uska jo bhi output hota hai voh milta hai 
+
+>>pehla : event aaya aur ek execution environment chala , 
+>>dusra : fir dusra event aaya fir dusra execution env chala , 
+>teesra : firr teesra event aaya fir ek teesra execution env chala 
+
+
+aisa nahi hota , if it is like ki agar ek invocation hua , toh agar thode time baad agar firse 
+ek dusra invocation aaya then itll use the same lambda execution context and some things are already initialised
+so it wont take much time running 
+
+COLD START : jab pheli baar chala toh firr time lagega , toh execution env bane ga and code chalega
+toh uss mai time laga 
+
+
+when we are creating db connection or doing anything related to connectivity ,
+do this approach agar pehle se connectivity ho toh naya connection nahi banana 
+
+-------------------------------------------------------------------------------------
+HOW TO ACESS ENV VATIABLES IN AWS 
+env object se 
+
+GENERAL INFORMATION : description
+Memory: ki jab function execute hoga toh voh kitni memory le ga , set value to pricing plan 
+jitni assign hogi chahe voh chale yaa nahi but paise utne assigned memory ke lagege 
+
+MEMORY (increase)-----> CPU (increase)------> Performance increase 
+
+Agar hamare Program ne kuch bhi install karna hai toh itll be 
+
+SNAP START : db se related hai jo bhi functions hai unhe lambda handler ke bahar rakh do 
+but gar new execution env hoga toh pehle execution mai voh bhi execution environment banayega 
+
+saara ka saara initialise ho gaya , uska ek snap shot le liya abb jab 
+agli baar lambda function trigger hoga , toh uss snap shot se lambda function trigger hoga 
+
+==========================================================================================
+CONTEXT OBJECT IN FUNCTION : This is what AWS provides to your function at runtime
+
+context ke andar lambda function ke infra ki INFORMATION store hoti hai 
+agar function ka name chahiye , kitna mb use ho raha hai yeh sab chahiye toh yeh use karege
+
+=============================================================================================
+Sync and Async invocations
+
+SYNCRONOUS INVOCATION : 
+
+we made a function that will wait for the execution to complete for some time and then 
+once the sleep time is complete itll continue the execution of next steps 
+
+------------------------------------------------------------------------------------------------------------
+ASYNCRONOUS INVOCATION                                                                                      |
+-------------------------------------------------------------------------------------------------------------
+user ne call kiya and itll be stored in event queue 
+
+for ASYNCRONOUS INVOCATION It repeats 3 times : agar pehli baar fail ho gaya fir yeh 2 baar aur retry karega 
+
+first fail >> after 1 minute [1ST RETRY] >> after 2 minute[2nd RETRY]
+
+=================================================================================================
+// WITH THE HELP OF CLI WE CAN ALSO USE ASYNC CALL :
+aws lambda invoke --function-name invocation-type-func --invocation-type Event  output.txt 
+==================================================================================================
+status : 202 -> request queue mai jaake baith gyi 
+
+labda function gye , invoke kiya , we received acknowledgement that invocation placed in queue 
+ek alag process chalega and itll pass event to our lambda functions and they will keep on processing our requests 
+
+USEAGE : 
+Hamare s3 mai humm jitni videos/ photos daal rahe hai humne uske Thumbnail bana ne hai 
+JAB BHI hum s3 ke andar koi bhi object save karege toh by default hamara lambda function async handle karega
+
+event queue mai daal dete ho : seperate process chalti hai : itll execute lambda function : we get only acknowledgement
+
+==============================================================================================
+how to acess a lambda function in the cli :
+aws lambda invoke --function-name aws_function_name iske_output_koha_store karuga
+aws lambda invoke --function-name invocation-type-func output.txt 
+
+===========================================================================================================
+                                                                                                          |
+Maximum age of events : if an async event is there and they have not got the access to lambda because     |
+access to lambda because it might be throttlling  or busy so when it eventually gets the access we check  |
+for the maximum age of event so that we might process some stale /old event                               |
+                                                                                                          |
+============================================================================================================
+
+DEAD LATTER QUEUE : 
+ek function hai jo 2 bbar retry hua and uske baad fail ho gaya , 
+kyaa hoga agar voh dusri baar bhi fail ho gaya , toh kam se hum humm user ko toh bataye 
+ki humne 3 baar retry krr diya hai and firr bhi nahi chala 
+
+
+we can send the notification by : 
+SNS : simple notification service 
+SQS : 
+
+user ko notification mai event ka object jaaye ga 
+
+========================================================================================================
+
+LAMBDA TRIGGERS : 
+jab bhi s3 pe koi bhi naya obect aaye ga , voh object update ho , delete ho , kuch bhi 
+toh hamara lambda function call hona chahiye 
+
+// when there is some triger based on s3 it leads to async invocation 
+
+=========================================================================================================
+agr hamari koi org library ho/ khud ki library ho , kuch functions ho
+we want to provide it in all the layers 
+
+org mai ek library hai, voh ek common library hai and usmai koi function hai 
+, voh function hume data nikal ke deta hai 
+
+50+ lambda functions hai jaha use ho rahe hai 
+soo unhe ek layer mai daal diya , and uss layer mai usse use krr rahe hai 
+=================================================================================================================================================
+we can also add custom layers the same way we add normal layers 
+HOW MANY LAYERS WE CAN ADD TO OUR LAMBDA FUNCTION ?
+
+Layer Limit: 5 layers per function.
+
+Combined Unzipped Size: The total unzipped size of the function and all layers combined must not exceed 250 MB.
+
+Layer Order Matters: If multiple layers export the same file path, the last added layer takes precedence (i.e., it overrides earlier ones).
+=================================================================================================================================================
+VERSIONING IN LAMBDA FUNCTION 
+
+Like supponse we made a lambda function V1 and then we have been using it after some time a need arrise that
+we need to make changes in that function and need to make a v2 version of it
+
+Now suppose aur V2 is not working as it should be ,
+but we have destroyed the previous working version of our code 
+
+HOW TO HANDLE THAT : with the help of versions
+Lambda version1:v1
+Lambda version2:v2
+latest code -$Latest:this latest version is mutable we can change all its parameters
+
+==================================================================================================
+Resource Based Policy : 
+iss lambda function ko kon kon execute krr sakta hai voh mention karege : ALB , s3 bucket ETC.
+AWS Labda ko koi cheez access krr rahi hai toh uske liye roles 
+
+
+EXECUTION ROLE : 
+voh saari cheeze jo AWS LAMBDA KHUD EXECUTE KARNE WAALA HAI UN CGEEZO KO 
+AGAR LAMBDA KO cheeze execute karni hai toh uske liye EXECUTION ROLE
+
+==================================================================================================
