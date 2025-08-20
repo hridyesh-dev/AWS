@@ -179,4 +179,140 @@ request update mapping template to show name of the table
 
 after that give the required permissions and then the request is good to go 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+CLASS 8 : Path and Query String Parameters 
+
+ek resource banaye ge student ke naam se and integrate it with a lambda function 
+and we will pass its ID 
+
+ENABLE LAMBDA PROXY INTEGRATION:
+iska yeh matlab hai ki jo bhi events honge voh vaise ke vaise hii 
+aws lambda ko pohunch jaaye ga and hum usmai changes nahi krr sakte 
+
+api gateway bilkul proxy ki tarah kaam karega and jo bhi request aaye gi usse 
+lambda ke paas bhej dega 
+
+suppose : Our lambda function is returning the list of all the students in our school 
+saare 500 students ki list 
+
+
+learning-ocean.com/student/1 : agar aisa ek api path chahiye , this should be a dynamic path 
+jis student ki id=1 hai uski value return ho jaaye gi 
+
+yeh kaise hoga ?
+//PATH PARAMETERS 
+with the help of path Parameters 
+add a resource with /{studentId} when you will test it 
+pass the studentId parameter 
+
+lambda function asie likhna hai ki usse samajh ki event ke andar se path parameters niakl ne hai ,
+path parameters ke andar se studentId nikal ni hai  , 
+aur jo bhi studentID  hogi uski value DB se nikal ni hai 
+
+// QUERY STRING PARAMETERS
+suppose there are 500 students but we dont not want all the data together so 
+we are applying pagination so we can pass page=1&size=20 to have data in chunks 
+
+JAB BHI AAP URL MAI KOI VARIABLE PAAS KARTE HIA TOH USSE QUERRY String Parameter kehte hai 
+buss lamda function ko pata ho ki use kaise karna hai
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CLASS 9 : Header parameters
+how we can set headers and how we can use them 
+
+same set headers values as : 
+headerone:valueone
+content-type:application/xml
+content-language:en
+
+yeh saare headers lambda ko mill jaaye ge and lambda ko samajh aaye 
+ga ki output xml mai dena hai and english language mai 
+
+can also be used for auth 
+authorization : Bearer token_value_here 
+
+//we will get these headers in our 
+headers":{"headerone":"valueone","authorization ":" Bearer token_value_here","content-type":"application/xml","content-language":"en"},
+"multiValueHeaders":{"headerone":["valueone"],"authorization ":[" Bearer token_value_here"],"content-type":["application/xml"],"content-language":["en"]}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CLASS 10 :  METHOD REQUEST
+
+//How we can apply validation on Method requests
+
+what is method request :
+KAISE HUMM Authentication LAGA SAKTE HIA BODY KE UPPAR , QUERY STRING PARAMETERS KE UPAR , 
+AND HEADERS KE UPAR 
+
+YAHA PRR REQUEST KI Authentication HOGI 
+
+ki agar ko irequest aa rahi hai toh usmai yeh headers hone hii chahiye 
+yeh path parameters hone hiii chahiye
+
+lambda pr pohunche se pehle hii yeh sab Authentication ho jaaye 
+api gateway ke level pe hii Authentication ho jaaye 
+
+lambda pe request aaye gi nahi uss se pehle request ko rok dege 
+validation mai kya chahiye : ki Query string parameters ke andar page aur size chahiye
+
+to apply this go to the method request 
+
+and add querry string parameters you want to include 
+
+and also enable request validator as 
+Request validator : Validate body, query string parameters, and headers 
+
+and then if we test and do not pass the parameters we will get 
+Status
+400
+Response body
+{"message": "Missing required request parameters: [size, page]"}
+
+// WE CAN ADD VALIDATIONS ON 
+1) QUERY STRING PARAMETERS : want page and size there
+
+2) HEADERS : want to add content type application/json header there 
+
+3) BODY : also want body to be passed in a specific structure 
+{
+    "name":
+    "age":
+    "phone no":
+}
+To validate the body you need to create a model jaha structure define karege 
+to define a model : go to json schema convertor 
+
+after that save the model and use it for Authentication 
+
+pass to check for happy case 
+{
+    "name":"Hridyesh",
+    "age":20,
+    "phone no":"1234567890"
+}
+
+method request mai : sabhi validations hoti hai on
+query string parameters , api headers and request body 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class 11 : what is INTEGRATION REQUEST : 
+
+user ne send kiya page and size , but lambda function 
+chahta ho ki size ki jagah count mill jaaye 
+
+now we can do where we take size from the user and while sending it to lambda 
+function change it to count (modify content of our request using api gateway )
+
+jab HTTP METHOD HIT HO jo iske andar size waala
+variable aa raha tha jab voh server pe jaaye count mai convert ho jaaye 
+
+we can do it in integration request : 
+we have taken request from the user but modifying it in between 
+
+simple user ne jo jo bheja usko api gateway pe modify krr diya , aur aage service prr bhej 
+diy a, request ko beech mai hii modify krr diya 
