@@ -1,3 +1,5 @@
+CLASS 1 : INTRO 
+
 // What is api gateway why its needed
 
 earlier there was monolithic arch all our bakend was in a single server 
@@ -5,37 +7,141 @@ saari requests ek hii server pe jaaye gi
 
 aaj bhi use hota hai monolithic arch 
 
-DEVIDING THE BACKEDN CODE IN DIFFERENT PARTS
+DEVIDING THE BACKEND CODE IN DIFFERENT PARTS
 It decouplled the system into different parts made it fault tolrent 
 
 but got another problem :
-Hrr serer ke liye alag authN and authZ hoga 
+Hrr server ke liye alag authN and authZ hoga 
 ssl check : ki request https hii aaye
 
-frontend app should know the address of all the servers
+user aplication / frontend app should know the address of all the servers
 
+->agar inventory manage karni hai toh request kaha 
+
+->agar cart access karni hai kaha access karege 
+
+-> agar product ki info dekhni hai toh kaha access karege 
+
+//isko solve karne ke liye api gateway aaya 
+//kaha se info link hui hai itll be managed by api gateway 
 
 API GATEWAY : iske andar saare authN and authZ , rate limit ,  ssl routing sab hoga
 user koi bhi request bheje ga toh directly server ko naa jaake api gateway prr jaaye gi 
 monitoring and logging
-Caching , load balancing , rate limitting sabh kuch api gateway handle krr sakta hai 
+Caching enable krr sakte hai ,
+load balancing , 
+rate limitting sabh kuch api gateway handle krr sakta hai 
 
 USES : 
-1)HTTP ENDPOINT 
-2)AWS LAMBDA : API GATEWAY IS serverless aws sab sambhal lega
-3)Any other aws service : fully managed service , humne kuch nahi karna hai sirf batana hai ki kya karo 
+1)HTTP ENDPOINT / KHUD KA SERVER 
+2)AWS LAMBDA : API GATEWAY IS serverless aws sab sambhal lega , SABSE ZYADA USE CASES 
+3)Any other aws service 
+
+API GATEWAY IS A : fully managed service , humne kuch nahi karna hai sirf batana hai ki for eg : Authentication
+enable karo and yeh krr dega 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+HOW TO MANAGE API GATEWAY , HOW WE CAN MANAGE IT , HOW TO CONFIGURE IT , USKE ANDAR KYA KYA FEATURE HAI 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CLASS 2 : 
+
+MAKING OUR FIRST API : 
+make a route and if someone will send a request then itll be sent to a http server 
+
+different types of api 
+HTTP API : it is the most simple , low cost and no basic feature 
+WEB SOCKET API 
+REST API : Publically Accessable : bohot saare extra features we can add our custom auth here : extra functionality 
+REST API PRIVATE : Can be Accessable only through the VPC 
+
+
+HOW TO BUILD A HTTP API : 
+1) clcik on build 
+
+2) give it a name 
+
+3) specify its address IPV4 or IPV6 
+
+4) NOW UNDER INTEGRATIONS SELECT HTTP 
+    a) to make an Integration give it a HTTP Method and choose the url endpoint 
+
+5) NOW CONFIGURE ROUTES AND GIVE ROUTES A NAME  AS YOU WANT 
+    agar /route_name pe request aaye gi toh connected resource pe aaye gi 
+    eg : agar /sher pe aaye gi request toh sheryans.com pe request jaaye gi 
+
+6) NOW CHOOSE THE STAGE: jaha we can  deploy our changes in the  api by default the stage is $default 
+
+we have learnt how routes are redirected according to different routes 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CLASS 3 : 
+HOW TO CREATE A REST API 
+
+1)choose an api type (new api )
+
+2)choose API NAME 
+
+3)choose api endpoint type : iska yeh matlab hai ki hamara api kaha kaha se hit ho sakta hai
+
+now a resource will be created , now under it go and create a method 
+
+a) choose Integration type -> lambda , http , mock , vpc or othe aws services 
+
+b) Method type -> choose method type 
+Yeh batata hai ki client(user) api gateway ko kis type ki request bhej raha hai — GET, POST, PUT, DELETE, etc.
+
+c) select HTTP method 
+yeh batata hai ki hamara API GATEWAY KIS type ki request bhej raha hai resource ko 
+
+USEFUL : it is useful when our api enpoint waale server are already deployed somewhere 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CLASS 4 : HOW TO CREATE A NEW RESOURCE AND CREATE METHODS IN IT 
+
+API GATEWAY AND LAMBDA : agar koi aur naya Integration karna hai jaise with lambda 
+or we want ki agar /lambda pe request jaaye toh kuch ho then 
+First create a new resource
+
+/ -> GET
+/learn -> GET
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CLASS 5 : HOW TO INTEGRATE API GATEWAY AND AWS LAMBDA 
+
+create a new resource and then create an api method in it 
+make the api and choose LAMBDA AS integration TYPE 
+
+JAB LAMBDA CHOOSE KRR LIYA CHOOSE ITS ARN AND THEN YOURE GOOD TO GO 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CLASS 6: WHAT IS MOCK IN API GATEWAY 
+
+MOCK INTEGRATION : suppose if a new project is being started so now design phase is done 
+and development is being started now , both work of front end and backend is happenning in parallel 
+
+now the frontend eng cant wait for the backend engineer to make the backend completely 
+instead to test his code he can make use of mock integration which will give him a static data as an api Response
+
 
 //4 steps:
 cliet ne api hit ki hai abb usse 4 steps mai response milega 
-a) Method Request
+
+1) Method Request
 ➡ Client ne jo request bheji hai, uski validation & permission check yahan hoti hai.
+
 Query params, headers, path params check honge
 Limit: Request size / rate limiting rules
 AuthN: Authentication (user kaun hai)
 AuthZ: Authorization (user ko yeh kaam karne ka right hai ya nahi)
+API KEY HAI KI NAHI , IAM ROLES HAI YA NAHI 
 
-b) Integration Request
+
+2) Integration Request
 ➡ API Gateway ke paas client ka validated data aagaya.
+Ab validation ho gaya and ab data backend pe bhejna hoga , toh uss se pehle agar kuch bhi process karna ho 
+
 Ab yahan pe backend ko bhejne se pehle data ka format change ho sakta hai.
 Keys rename karna
 JSON ko XML me convert karna
@@ -43,10 +149,9 @@ Extra fields add/remove karna
 Basically backend ko samajh aane wale format me data bhejna
 
 c) Integration Response
-➡ Backend ne API Gateway ko jo response bheja, voh yahan aata hai.
-Backend ka raw response ho sakta hai ki API Gateway ko samajh na aaye
-Yahan pe response ka format change hota hai
-Example: XML → JSON, keys rename, extra data remove
+
+➡ Backend ne jab bhi response bheja ho toh voh sabse pehle idhar aata hai 
+Jo bhi response aaya hai agar usmai koi changes karne ho toh yaha hoga 
 
 d) Method Response
 ➡ Ab API Gateway ke paas processed backend data hai.
@@ -55,4 +160,23 @@ Final status code decide hota hai (200, 404, etc.)
 Response headers set hote hain
 Response body ka format check / validate hota hai (model validation)
 Yahi woh final output hai jo client ko dikhega
+
+TO MAKE/IMPLEMENT MOCK 
+go to integration response and make chanes in that 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CLASS 7 : HOW WE CAN INTEGRATE ANY AWS SERVICE WITH API GATEWAY ( Here API GATEWAY <----> DynamoDB )
+//ek aisa api baana hai jo DynamoDB ke items ko scan kare and return kare 
+
+//1) THORUGH AWS LAMBDA : 
+ek lambda banao that will connect to DynamoDB and will return all the data 
+
+//2) API GATEWAY : we can integrate api gateway with any aws service 
+//REST METHOD KI HELP se agar DynamoDB pe scan operation lagana hai then we will do a POST request 
+
+create a rest api , in integration method choose AWS resources , then select DynamoDB , give it the requests and then in integration
+request update mapping template to show name of the table 
+
+after that give the required permissions and then the request is good to go 
+
 
