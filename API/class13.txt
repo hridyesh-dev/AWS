@@ -1,0 +1,22 @@
+METHOD REQUEST MAI SEEKHA HOW TO APPLY VALIDATIONS 
+INTEGRATION REQUEST MAI SEEKHA HOW WE CAN CHANGE AND ACCESS THE REQUEST BEFORE IT REACHES THE server
+AND integrateD WITH webhook now lets integrate it with a LAMBDA FUNCTION 
+
+when we test we will get an internal server error 
+cuz our data wont be parsed into a valid json string 
+jab bhi humm template define karte hai it is velocity template language
+
+Jab bhi aap ek json string pass karr rahe ho then usse kaise parse karna hota hai 
+use function util.escapeJavaScript
+
+//this is how we can do it 
+    "data": "$util.escapeJavaScript($input.json('$'))"
+
+jab bhi lambda function use krr rahe hai and as a proxy use nahi krr rahe ,
+
+toh yeh event humme khud banana padega 
+
+request body mai kya chahiye , agar query chahiye aur agar headers chahiye toh 
+voh sab humme template mapping mai daalne padege
+
+toh sabhi cheeze message template mai set karni padegi 

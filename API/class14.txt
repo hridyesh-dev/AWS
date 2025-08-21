@@ -1,0 +1,33 @@
+//HERE WE WILL LEARN ABOUT METHOD RESPONSE 
+
+// INTEGRATION Response : ABB JOH LAMBDA SE RESPONSE AA RAHA HAI USSE ON THE GO MODIFY KARNA 
+// METHOD RESPONSE : 
+
+jo humne lambda mai pass kiya hai voh humme mill gaya hai Response mai 
+why? kyuki yeh automatically map hota hai 
+
+if we made some changes then like made header1 , body1 then api gateway wont be able to map 
+and would lead to internal server error 
+
+but when we checked lambda ki tarah se koi error nahi hai 
+buss jo api gateway expect krr raha tha usse voh nahi mila 
+
+if proxy integration is enabled jaise return hoga lambda se voh vaise api gateway 
+pe mille ga , so apiGateway is expecting header,body,status Code 
+
+// now we want to modify the custom-header that we are passing 
+we go to method resource and add a new header 
+but since the proxy itegration is enabled how we can change it 
+
+//so disable the proxy integration and then you can map it 
+
+//agar reponse ko map karna hua toh how we can change the 
+Response body 
+
+{
+    "name":"Hridyesh",
+    //pura ka pura jo bhi input aa raha hai voh yaha hoga 
+    "lambda_output":"$input.body"
+}
+
+abb iske anadar se nody kaise nikalo ge kyuki yeh object toh hai nahi,

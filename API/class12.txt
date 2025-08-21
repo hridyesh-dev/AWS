@@ -1,0 +1,51 @@
+integration request me earlier we saw how we can modify headers , query string parameters 
+but what if we need to modify the request body too 
+
+HOW CAN WE DO IT : we cant do it when
+PROXY INTEGRATION IS ENABLED : jaise bhi request body aaye gi usse vaise ke vaise hii bhej denge 
+
+jiase hii disable karege we will get the option of mapping template 
+
+click in edit mapping template : 
+{
+    "hello":"hridyesh",
+    "one":"$input.params()"
+}
+
+{
+    "hello":"hridyesh",
+    "query":{
+        //exact location pe jaake data retrive karega
+        "page":"$input.params().querystring.page",
+        //prr dictionary mai jaake data le ga 
+        //agar path mai mill gyi toh ,page mai mil gyi toh voh utha le ga 
+        "size":"$input.params('size')"
+    }
+}
+
+//to include headers too 
+{
+    "hello":"hridyesh",
+    "query":{
+        "page":"$input.params().querystring.page",
+        "size":"$input.params('size')"
+    },
+    "headers":{
+        "headers":"$input.params('content-type')"
+    }
+}
+
+//what to change to include body  
+{
+    "hello": "hridyesh",
+    "query": {
+        "page": "$input.params().querystring.page",
+        "size": "$input.params('size')"
+    },
+    "headers": {
+        "headers": "$input.params('content-type')"
+    },
+    "data": "$input.json('$')"
+}
+
+now we can also include the data passed in the body too 
