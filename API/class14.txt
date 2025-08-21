@@ -31,3 +31,12 @@ Response body
 }
 
 abb iske anadar se nody kaise nikalo ge kyuki yeh object toh hai nahi,
+
+aise krr ke object ke form mai output aaye ga 
+{
+    "name":"Hridyesh",
+    "lambda_output":"$input.body",
+    "lambdaa_output":"util.parseJson($input.body)"
+}
+
+//to get  output body : 
