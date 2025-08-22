@@ -23,7 +23,7 @@ but since the proxy itegration is enabled how we can change it
 
 //agar reponse ko map karna hua toh how we can change the 
 Response body 
-
+//jo api gateway se response mill raha hia usse print krr dete hai 
 {
     "name":"Hridyesh",
     //pura ka pura jo bhi input aa raha hai voh yaha hoga 
@@ -32,7 +32,7 @@ Response body
 
 abb iske anadar se nody kaise nikalo ge kyuki yeh object toh hai nahi,
 
-aise krr ke object ke form mai output aaye ga 
+aise krr ke object ke form mai output aaye ga , WITH THE HELP OF VELOCITY TEMPLATE
 {
     "name":"Hridyesh",
     "lambda_output":"$input.body",
@@ -40,3 +40,11 @@ aise krr ke object ke form mai output aaye ga
 }
 
 //to get  output body : 
+{
+    "name":"Hridyesh",
+    "lambda_output":"$input.body",
+    "lambdaa_output":"util.parseJson($input.body).body"
+}
+
+we can map response and user ko uss format mai data do jis format mai usse chahiye 
+ 
