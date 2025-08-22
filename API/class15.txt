@@ -1,0 +1,38 @@
+How to authenticate API GATEWAY 
+jab api gateway use karte hai toh kitne type ki authentication laa sakte hai 
+3-5 ways to apply auth except cognito 
+
+//generally without any auth if someone is able to hit the api link 
+they will be able to invoke the lambda function 
+
+we want only authenticated user should hit url and get the response 
+
+ways to authenticate 
+1) method request mai authorization  using aws IAM 
+now create a new IAM USER , and make its ,secret and access key : 
+after that attatch IAM POLICIES WITH RELATED PERMISSIONS AND THEN ITS DONE 
+
+BEHIND THE SCENE post man ne signature banaya hai with the help of its internal aws comand 
+use this method when aws ki application hii api gateway se baat karna chahiti ho 
+
+cant apply rate limitting and throttling 
+ 
+____________________________________________________________________________________________________________
+
+2) Agar limitations lagani ho like rate limitting then we can use API KEY :
+GO TO Auth and enable API KEY 
+
+now how to enable it :
+go to the api keys option 
+click on create API KEY : you will get a ne api key : MB9em30wXQPMG4ypo1V82eJ7UsMZD5c4khV9Vfr9
+
+now abb jo api key bani hai usse batao ki konse API Gateway ke liye bani hai 
+
+to link that create a usage plan , link that api key to the usage 
+plan and then link the usage paln to the  stage(API GATEWAY ) 
+
+we can also apply rate limitting and quota to it 
+
+____________________________________________________________________________________________________________
+
+used DEMO resource in api gateway : first rest api for this

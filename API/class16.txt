@@ -1,0 +1,37 @@
+HOW TO USE CUSTOM AUTHORISER IN API GATEWAY : 
+
+Kuch aisa logic with the help of which we can authenticate
+
+User se ek token lo , uss token ko validate karo , 
+
+is the token given by the user valid , 
+
+token ko header mai dalo and check if the user ne jo token diya hai is this valid 
+
+
+aisi policy return karr te hai 
+
+const policy = {
+    principalId: "user",
+    policyDocument: {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Action: "execute-api:Invoke",
+          Effect: "Allow",
+          Resource: event.methodArn,
+        },
+      ],
+    },
+};
+
+
+abb since the lambda is made we will make an AUTHORIZER
+
+hamara token konse header pe aaye ga : LOHeader
+//token validation : agar hamara token bearer se start ho etc ... yeh sab logic idhar de sakte hai 
+yahi se check krr sakte hai without invoking lambda function 
+
+agar match nahi karega toh yahi se reject ho jaaye gi 
+
+// authFunction will allow or deny the request based on the header that we are passing it 
