@@ -1,0 +1,49 @@
+// BLUE GREEN DEPLOYMENT USING LAMBDA AND API GATEWAY
+
+// we can create different versions of our lambda function 
+
+// alias are mutable pointers which point to different versions of the lambda function
+
+so when we are deploying it now abb mai 
+abb 3 alag alag stage banaye ge , toh kaise usse manage karege : using stage variables 
+
+jo prod waala lambda hai uske function url ke  end mai :prod hai 
+jo test waala lambda hai uske function url ke end mai :test hai 
+jo $Latest waala lambda hai uske function url ke end mai :dev hai 
+
+we need to take care of it using integration request mai stage variables {lambdaAlias} set karne padege
+
+i want ki prod ki request prod lambda pe jaaye
+i want ki test ki request test lambda pe jaaye
+i want ki $Latest ki request dev lambda pe jaaye
+
+lambdaAlias : yeh variable humme pass kara padega hrr satage mai se 
+hrr stage mai batana padega ki lambda alias ki value kyaa hai
+
+when were making a stage varibale i have to give lambda function some permissions : 
+
+//permission for DEV lambda 
+aws lambda add-permission \
+--function-name "arn:aws:lambda:ap-south-1:253862057321:function:lambda-verison-alias:dev" \
+--source-arn "arn:aws:execute-api:ap-south-1:253862057321:6nr3u3xs70/*/GET/" \
+--principal apigateway.amazonaws.com \
+--statement-id 7723c9db-a3c4-4bc1-a8ad-61ce7a3b5f29 \
+--action lambda:InvokeFunction
+
+//permission for PROD lambda 
+aws lambda add-permission \
+--function-name "arn:aws:lambda:ap-south-1:253862057321:function:lambda-verison-alias:prod" \
+--source-arn "arn:aws:execute-api:ap-south-1:253862057321:6nr3u3xs70/*/GET/" \
+--principal apigateway.amazonaws.com \
+--statement-id 7723c9db-a3c4-4bc1-a8ad-61ce7a3b5f29 \
+--action lambda:InvokeFunction
+
+//permissions for rest lambda
+aws lambda add-permission \
+--function-name "arn:aws:lambda:ap-south-1:253862057321:function:lambda-verison-alias:test" \
+--source-arn "arn:aws:execute-api:ap-south-1:253862057321:6nr3u3xs70/*/GET/" \
+--principal apigateway.amazonaws.com \
+--statement-id 7723c9db-a3c4-4bc1-a8ad-61ce7a3b5f29 \
+--action lambda:InvokeFunction
+
+and now go to stages and under stage variables add the name of the stages as dev, prod and test accordingly 
