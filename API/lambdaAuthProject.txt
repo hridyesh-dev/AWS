@@ -1,0 +1,28 @@
+HOW TO SECURE API GATEWAY WITH LAMBDA AUTHORIZER 
+
+CREATE REST API WITH LAMBDA AS A BACKEND SERVICE
+
+If user wants to access the the api the api gateway will pass it to the aith lambda
+which will authenticate , and if the authentication is sucessful 
+request will be forwarded else it wont be 
+
+so we made a rest api and connected it to a lambda : the problem is anyone can access it 
+there is no security 
+
+so we will be adding lambda AUTHORIZER to authenticate the request 
+it will check for auth token and if the token is matched it'll return an IAM 
+policy telling user can have the access to invoke this lambda 
+based on the auth token 
+
+policy_document = {
+    'Version' : '',
+    'Statement' :[
+        {
+            'Action' : 'execute-api:Invoke',
+            'Effect': will it be allowed or denied,
+            'Resource': resource
+        }
+    ]
+} 
+
+the lambda will populate this policy based on the auth token it is getting 

@@ -78,3 +78,26 @@ On the 1st of every month at midnight	|   cron(0 0 1 * ? *)	     |  Runs monthly
 _______________________________________________________________________________________________________________________________________________
 On December 25, 2025 at 8:00 AM	      |   cron(0 8 25 12 ? 2025) |	Runs once on December 25, 2025 at 8:00 AM	  |   2025-12-25 08:00:00       |
 _______________________________________________________________________________________________________________________________________________
+
+DIFFERENCE BETWEEN A RULE BASED AND A SCHEDULE BASED TRIGGER 
+
+RULE BASED : it cant have a start time and an end time , it requires event bus
+A rule-based trigger listens for specific events on an EventBridge event bus. These events can come from AWS services, custom applications, or SaaS integrations.
+
+🔧 Key Characteristics:
+Requires an event bus (default or custom).
+No start or end time — it reacts whenever the matching event occurs.
+Uses event patterns to filter events (e.g., when an EC2 instance changes state).
+Can trigger Lambda, Step Functions, SNS, etc.
+
+
+and 
+Schedule also provide one time events  it does not require event bus
+
+A schedule-based trigger runs on a fixed time interval or cron expression — like a cron job.
+
+🔧 Key Characteristics:
+Does NOT require an event bus.
+Can be one-time or recurring.
+Supports rate expressions (rate(1 hour)) and cron expressions (cron(0 20 * * ? *)).
+Ideal for time-driven automation.
